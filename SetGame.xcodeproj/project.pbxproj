@@ -14,6 +14,10 @@
 		38F907002B44B6E000118C4F /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F906FF2B44B6E000118C4F /* Card.swift */; };
 		38F907022B44B8CA00118C4F /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F907012B44B8CA00118C4F /* Deck.swift */; };
 		38F907052B44BACE00118C4F /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F907042B44BACE00118C4F /* Diamond.swift */; };
+		38F907082B44BF0800118C4F /* Squiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F907072B44BF0800118C4F /* Squiggle.swift */; };
+		38F9070B2B44CA4500118C4F /* StripedForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F9070A2B44CA4500118C4F /* StripedForm.swift */; };
+		38F9070D2B44CBD200118C4F /* Extension+Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F9070C2B44CBD200118C4F /* Extension+Shape.swift */; };
+		38F9070F2B44CDF200118C4F /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F9070E2B44CDF200118C4F /* CardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +29,10 @@
 		38F906FF2B44B6E000118C4F /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		38F907012B44B8CA00118C4F /* Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		38F907042B44BACE00118C4F /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
+		38F907072B44BF0800118C4F /* Squiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Squiggle.swift; sourceTree = "<group>"; };
+		38F9070A2B44CA4500118C4F /* StripedForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripedForm.swift; sourceTree = "<group>"; };
+		38F9070C2B44CBD200118C4F /* Extension+Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+Shape.swift"; sourceTree = "<group>"; };
+		38F9070E2B44CDF200118C4F /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +86,8 @@
 		38F907032B44BAB900118C4F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				38F907042B44BACE00118C4F /* Diamond.swift */,
+				38F907092B44CA2000118C4F /* Shape */,
+				38F9070E2B44CDF200118C4F /* CardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -90,6 +99,17 @@
 				38F906FF2B44B6E000118C4F /* Card.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		38F907092B44CA2000118C4F /* Shape */ = {
+			isa = PBXGroup;
+			children = (
+				38F907072B44BF0800118C4F /* Squiggle.swift */,
+				38F907042B44BACE00118C4F /* Diamond.swift */,
+				38F9070A2B44CA4500118C4F /* StripedForm.swift */,
+				38F9070C2B44CBD200118C4F /* Extension+Shape.swift */,
+			);
+			path = Shape;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,9 +182,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38F907082B44BF0800118C4F /* Squiggle.swift in Sources */,
+				38F9070F2B44CDF200118C4F /* CardView.swift in Sources */,
+				38F9070D2B44CBD200118C4F /* Extension+Shape.swift in Sources */,
 				38F907022B44B8CA00118C4F /* Deck.swift in Sources */,
 				38F906F42B44B6CF00118C4F /* ContentView.swift in Sources */,
 				38F907002B44B6E000118C4F /* Card.swift in Sources */,
+				38F9070B2B44CA4500118C4F /* StripedForm.swift in Sources */,
 				38F907052B44BACE00118C4F /* Diamond.swift in Sources */,
 				38F906F22B44B6CF00118C4F /* SetGameApp.swift in Sources */,
 			);
