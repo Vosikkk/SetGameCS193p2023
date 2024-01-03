@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Card: CustomStringConvertible {
+struct SetCard: CustomStringConvertible {
    
     var description: String {
         "\(number) \(color) \(shape) \(fill)"
