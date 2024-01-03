@@ -33,9 +33,9 @@ struct SetGame<Content> where Content: Matchable {
         cards = []
         deck = []
         self.numberOfCardsToStart = numberOfCardsToStart
-        for i in 0..<numberOfCardsInDeck {
-            let content = cardContentFactory(i)
-            deck.append(Card(content: content, id: i))
+        for index in 0..<numberOfCardsInDeck {
+            let content = cardContentFactory(index)
+            deck.append(Card(content: content, id: index))
         }
         deck.shuffle()
     }

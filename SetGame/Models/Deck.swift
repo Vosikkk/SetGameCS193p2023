@@ -10,23 +10,23 @@ import Foundation
 
 struct Deck {
     
-    private(set) var deck: [SetCard] = []
+    private(set) var cards: [SetCard] = []
     
     init() {
         for number in SetCard.Variant.allCases {
             for color in SetCard.Variant.allCases {
                 for shape in SetCard.Variant.allCases {
                     for fill in SetCard.Variant.allCases {
-                        deck.append(SetCard(number: number, color: color, shape: shape, fill: fill))
+                        cards.append(SetCard(number: number, color: color, shape: shape, fill: fill))
                     }
                 }
             }
         }
-        deck.shuffle()
+        cards.shuffle()
     }
     
     
     mutating func draw() -> SetCard? {
-        deck.count > 0 ? deck.remove(at: Int.random(in: 0..<deck.count)) : nil
+        cards.count > 0 ? cards.remove(at: Int.random(in: 0..<cards.count)) : nil
     }
 }
