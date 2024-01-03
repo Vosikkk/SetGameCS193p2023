@@ -12,6 +12,8 @@ class SetCardGame: ObservableObject {
     typealias Game = SetGame<SetCard>
     typealias Card = Game.Card
     
+    
+    
     @Published private var game: Game = SetCardGame.createGame()
     
     static func createGame() -> Game {

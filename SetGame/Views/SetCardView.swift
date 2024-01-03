@@ -1,5 +1,5 @@
 //
-//  CardView.swift
+//  SetCardView.swift
 //  SetGame
 //
 //  Created by Саша Восколович on 03.01.2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CardView: View {
+struct SetCardView: View {
     
     var card: SetCard
     var colorsShape: [Color] = [.red, .green, .purple]
@@ -22,9 +22,9 @@ struct CardView: View {
                 Spacer()
             }
         }
-        .padding(10)
+        .padding(6)
         .foregroundStyle(colorsShape[card.color.rawValue - 1])
-        .aspectRatio(CGFloat(6.0/8.0), contentMode: .fit)
+        .aspectRatio(CGFloat(2.0/3.0), contentMode: .fit)
     }
     
     private func cardShape() -> some View {
@@ -57,7 +57,7 @@ struct CardView: View {
 }
 
 #Preview {
-    CardView(card: SetCard(number: .v3, color: .v2, shape: .v1, fill: .v3))
+    SetCardView(card: SetCard(number: .v3, color: .v2, shape: .v1, fill: .v3))
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)
