@@ -106,6 +106,9 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     
+    
+    
+    
     struct Card: Identifiable {
         var isSelected: Bool = false
         var isMatched: Bool = false

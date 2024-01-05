@@ -10,54 +10,55 @@ import SwiftUI
 struct SetCardView: View {
     
     var card: SetCard
-    var colorsShape: [Color] = [.red, .green, .purple]
+    var settings: Setting
+    
     
     var body: some View {
         GeometryReader { geometry in
             VStack {
                 Spacer()
-                ForEach(0..<card.number.rawValue) { index in
-                    cardShape().frame(height: geometry.size.height / 4)
+                ForEach(0..<card.number.rawValue, id: \.self) { index in
+                    cardShape().frame(height: geometry.size.height / 4.0)
                 }
                 Spacer()
             }
         }
         .padding(6)
-        .foregroundStyle(colorsShape[card.color.rawValue - 1])
+        .foregroundStyle(settings.colorsShape[card.number.rawValue - 1])
         .aspectRatio(CGFloat(2.0/3.0), contentMode: .fit)
     }
     
-    private func cardShape() -> some View {
-        ZStack {
-            switch card.shape {
-            case .v1:
-                shapeFill(shape: Diamond())
-            case .v2:
-                shapeFill(shape: Capsule())
-            case .v3:
-                shapeFill(shape: Squiggle())
-            }
+    @ViewBuilder private func cardShape() -> some View {
+        switch shapeInSet(card: card) {
+        case .diamond: shapeFill(shape: Diamond())
+        case .oval: shapeFill(shape: Capsule())
+        case .squiggle: shapeFill(shape: Squiggle())
+        default: Capsule()
         }
     }
     
-    private func shapeFill<setShape>(shape: setShape) -> some View where setShape: Shape {
-        ZStack {
-            switch card.fill {
-            case .v1:
-                shape.stroke(lineWidth: lineWidth)
-            case .v2:
-                shape.fillPlusBorder(lineWidth)
-            case .v3:
-                shape.stripe(lineWidth)
-            }
+    @ViewBuilder private func shapeFill<setShape>(shape: setShape) -> some View where setShape: Shape {
+        switch fillInSet(card: card) {
+        case .stroke: shape.stroke(lineWidth: lineWidth)
+        case .fill:   shape.fillPlusBorder()
+        case .stripe: shape.stripe()
+        default: Capsule()
         }
+    }
+    
+    private func shapeInSet(card: SetCard) -> Setting.ShapesInSet {
+        settings.shapes[card.shape.rawValue - 1]
+    }
+    
+    private func fillInSet(card: SetCard) -> Setting.FillInSet {
+        settings.fillForShapes[card.fill.rawValue - 1]
     }
     
     private let lineWidth: CGFloat = 3
 }
 
 #Preview {
-    SetCardView(card: SetCard(number: .v3, color: .v2, shape: .v1, fill: .v3))
+    SetCardView(card: SetCard(number: .v3, color: .v2, shape: .v1, fill: .v1), settings: Setting())
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)
