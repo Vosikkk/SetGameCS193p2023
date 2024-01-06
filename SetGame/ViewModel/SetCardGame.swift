@@ -43,6 +43,11 @@ class SetCardGame: ObservableObject {
         game.cards
     }
     
+    var hintCount: String {
+        "Hints: \(game.hints.count) / \(game.hintsCount + 1)"
+    }
+    
+    
     // MARK: - Intent
     
     func choose(card: Card) {
@@ -61,18 +66,24 @@ class SetCardGame: ObservableObject {
         game.deal(3)
     }
     
+    func hint() {
+        game.hint()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.game.disHint()
+        }
+    }
 }
 
 struct Setting {
     
     let colorsShape: [Color] = [.red, .green, .purple]
-    let colorsBorder: [Color] = [#colorLiteral(red: 0.1940105259, green: 0.003823338309, blue: 0.9934375882, alpha: 1),#colorLiteral(red: 0.9955675006, green: 0.001091319602, blue: 0.1432448924, alpha: 1),#colorLiteral(red: 0.9914981723, green: 0.9005147815, blue: 0.01922592521, alpha: 1)].map {Color($0)}
+    let colorsBorder: [Color] = [#colorLiteral(red: 0.1940105259, green: 0.003823338309, blue: 0.9934375882, alpha: 1),#colorLiteral(red: 0.9955675006, green: 0.001091319602, blue: 0.1432448924, alpha: 1),#colorLiteral(red: 0.9914981723, green: 0.9005147815, blue: 0.01922592521, alpha: 1)].map { Color($0) }
     
     let fillForShapes = [FillInSet.stroke, .stripe, .fill]
     
     let shapes = [ShapesInSet.diamond, .oval, .squiggle]
     
-    
+    let colorHint: Color = Color(#colorLiteral(red: 0.4508578777, green: 0.9882974029, blue: 0.8376303315, alpha: 1))
     
     enum FillInSet: Int, CaseIterable {
         case stroke = 1

@@ -18,14 +18,16 @@ struct SetCardView: View {
             VStack {
                 Spacer()
                 ForEach(0..<card.number.rawValue, id: \.self) { index in
-                    cardShape().frame(height: geometry.size.height / 4.0)
+                    cardShape()
+                        .frame(height: card.number.rawValue < 3 ? geometry.size.height / 4.0 : (geometry.size.height - 30) / CGFloat(card.number.rawValue))
+                
                 }
                 Spacer()
             }
         }
         .padding(6)
         .foregroundStyle(settings.colorsShape[card.number.rawValue - 1])
-        .aspectRatio(CGFloat(2.0/3.0), contentMode: .fit)
+        .aspectRatio(2/3, contentMode: .fit)
     }
     
     @ViewBuilder private func cardShape() -> some View {
@@ -58,7 +60,7 @@ struct SetCardView: View {
 }
 
 #Preview {
-    SetCardView(card: SetCard(number: .v3, color: .v2, shape: .v1, fill: .v1), settings: Setting())
+    SetCardView(card: SetCard(number: .v1, color: .v2, shape: .v1, fill: .v1), settings: Setting())
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)

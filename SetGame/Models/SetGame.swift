@@ -8,7 +8,7 @@
 import Foundation
 
 protocol Matchable {
-    static func match(cards: [Self]) -> Bool
+    static func isSet(cards: [Self]) -> Bool
 }
 
 struct SetGame<Content> where Content: Matchable {
@@ -25,8 +25,32 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     private var matchedIndices: [Int] {
-        cards.indices.filter { cards[$0].isSelected && cards[$0].isMatched }
+        cards.indices.filter { cards[$0].isSelected && cards[$0].state == .matched }
     }
+    
+    var hintsCount: Int = 0
+    
+    
+    var hints: [[Int]] {
+        
+        var res: [[Int]] = []
+        
+        if cards.count > 2 {
+            for i in 0..<cards.count - 2 {
+                for j in (i+1)..<cards.count - 1 {
+                    for k in (j+1)..<cards.count {
+                        let check = [cards[i], cards[j], cards[k]]
+                        if Content.isSet(cards: check.map { $0.content }) {
+                            res.append([i,j,k])
+                        }
+                    }
+                }
+            }
+        }
+        return res
+    }
+    
+    
     
     
     init(numberOfCardsToStart: Int, numberOfCardsInDeck: Int, cardContentFactory: (Int) -> Content) {
@@ -49,21 +73,21 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     mutating func choose(card: Card) {
-        if let chosenIndex = cards.getIndex(matching: card), !cards[chosenIndex].isSelected, !cards[chosenIndex].isMatched {
+        if let chosenIndex = cards.getIndex(matching: card), !cards[chosenIndex].isSelected, cards[chosenIndex].state == .normal {
            
             // Chosen 2 cards
             if selectedIndices.count == 2 {
                 cards[chosenIndex].isSelected = true
                 
-                if Content.match(cards: selectedIndices.map { cards[$0].content }) {
+                if Content.isSet(cards: selectedIndices.map { cards[$0].content }) {
                     // Matched
                     for index in selectedIndices {
-                        cards[index].isMatched = true
+                        cards[index].state = .matched
                     }
                 } else {
                     // Not matched
                     for index in selectedIndices {
-                        cards[index].isNotMatched = true
+                        cards[index].state = .notMatched
                     }
                 }
             } else {
@@ -76,13 +100,17 @@ struct SetGame<Content> where Content: Matchable {
                 }
                 
             }
+            // Disselected card
+        } else if let chosenIndex = cards.getIndex(matching: card), cards[chosenIndex].isSelected,
+                  cards[chosenIndex].state == .normal {
+            cards[chosenIndex].isSelected = false
         }
     }
     
     private mutating func onlySelectedCard(_ chosenIndex: Int) {
         for index in cards.indices {
             cards[index].isSelected = index == chosenIndex
-            cards[index].isNotMatched = false
+            cards[index].state = .normal
         }
     }
     
@@ -106,18 +134,43 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     
+    mutating func hint() {
+        if hints.count != 0 && hintsCount < hints.count {
+            for index in hints[hintsCount] {
+                cards[index].state = .hint
+            }
+            hintsCount += 1
+            hintsCount = hintsCount < hints.count ? hintsCount : 0
+        }
+    }
     
-    
-    
-    struct Card: Identifiable {
-        var isSelected: Bool = false
-        var isMatched: Bool = false
-        var isNotMatched: Bool = false
-        var content: Content
-        var id: Int
+    mutating func disHint() {
+        if hints.count != 0 {
+            for index in 0..<cards.count {
+                cards[index].state = .normal
+            }
+        }
     }
     
     
+//    struct Card: Identifiable {
+//        var isSelected: Bool = false
+//        var isMatched: Bool = false
+//        var isNotMatched: Bool = false
+//        var isHint: Bool = false
+//        var content: Content
+//        var id: Int
+//    }
+    
+    struct Card: Identifiable {
+        var isSelected: Bool = false
+        var state: CardState = .normal
+        var content: Content
+        var id: Int
+    }
+    enum CardState {
+        case normal, matched, notMatched, hint
+    }
 }
 
 extension Array where Element: Identifiable {

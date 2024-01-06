@@ -8,24 +8,21 @@
 import SwiftUI
 
 
-struct Cardify: ViewModifier, Animatable {
+struct CardModifier: ViewModifier, Animatable {
     
     var animatableData: Double {
         0
     }
     
-    var isMatched: Bool
     var isSelected: Bool
-    var isNotMatched: Bool
     var settings: Setting
-    
-    var colorsBorder: [Color] = [.blue, .red, .yellow]
+    var state: SetGame<SetCard>.CardState
     
     func body(content: Content) -> some View {
         ZStack {
             let base = RoundedRectangle(cornerRadius: cornerRadius)
             base.strokeBorder(highlightColor(), lineWidth: borderLineWidth)
-                .background(base.fill(.white))
+                .background(base.fill(state == .hint ? settings.colorHint : .white))
                 .overlay(content)
         }
 
@@ -34,12 +31,14 @@ struct Cardify: ViewModifier, Animatable {
     private func highlightColor() -> Color {
         var color: Color = .white.opacity(0)
         if isSelected {
-            if isMatched {
-                color = settings.colorsBorder[0]
-            } else if isNotMatched {
-                color = settings.colorsBorder[1]
-            } else {
+            switch state {
+            case .normal:
                 color = settings.colorsBorder[2]
+            case .matched:
+                color = settings.colorsBorder[0]
+            case .notMatched:
+                color = settings.colorsBorder[1]
+            default: break
             }
         }
         return color
@@ -50,7 +49,7 @@ struct Cardify: ViewModifier, Animatable {
 }
 
 extension View {
-    func cardify(isMatched: Bool, isSelected: Bool, isNotMatched: Bool, settings: Setting) -> some View {
-        modifier(Cardify(isMatched: isMatched, isSelected: isSelected, isNotMatched: isNotMatched, settings: settings))
+    func cardMod(isSelected: Bool, settings: Setting,  state: SetGame<SetCard>.CardState ) -> some View {
+        modifier(CardModifier(isSelected: isSelected, settings: settings, state: state))
     }
 }

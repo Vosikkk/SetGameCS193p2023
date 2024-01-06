@@ -22,12 +22,17 @@ struct SetCardGameView: View {
     
     var body: some View {
         VStack {
+            HStack {
+                deck
+                Spacer()
+            }
             GeometryReader { geometry in
                 AspectVGrid(items: setGame.cards, aspectRatio: aspectRatio) { card in
                     CardView(card: card, settings: $setGame.settings)
                         .transition(.cardTransition(size: geometry.size)) // Змініть анімацію
+//                        .animation( Animation.easeInOut(duration: 1.00)
+//                                                                  .delay(transitionDelay(card: card)))
                        
-                        
                         .onTapGesture {
                             setGame.choose(card: card)
                         }
@@ -38,19 +43,15 @@ struct SetCardGameView: View {
                 deal()
             }
             HStack() {
-                Text("Deck: \(setGame.cardsInDeck)")
+                hintButton
                 Spacer()
-                Button("Deal+3") {
-                    getThree()
-                }.greenButtonFy()
+                dealButton
                 Spacer()
-                Button("New Game") {
-                   newGame()
-                }.greenButtonFy()
+                newGameButton
             }
-            .foregroundStyle(.white)
-            .font(.headline)
         }
+        .foregroundStyle(.white)
+        .font(.headline)
         .padding()
         .background(tableColor.ignoresSafeArea(.all))
     }
@@ -78,6 +79,32 @@ struct SetCardGameView: View {
         return Double(setGame.cards.getIndex(matching: card)!) * cardTrasitionDelay
     }
     
+    private var deck: some View {
+        Text("Deck: \(setGame.cardsInDeck)")
+    }
+    
+    private var hintButton: some View {
+        Button(setGame.hintCount) {
+            setGame.hint()
+        }
+        .greenButton()
+    }
+    
+    private var dealButton: some View {
+        Button("Deal+3") {
+            getThree()
+        }
+        .greenButton()
+        .disabled(setGame.cardsInDeck == 0)
+        .foregroundStyle(setGame.cardsInDeck == 0 ? .gray : .white)
+    }
+    
+    private var newGameButton: some View {
+        Button("New Game") {
+           newGame()
+        }
+        .greenButton()
+    }
 }
 
 
@@ -89,7 +116,7 @@ struct CardView: View {
     
     var body: some View {
         SetCardView(card: card.content, settings: settings)
-            .cardify(isMatched: card.isMatched, isSelected: card.isSelected, isNotMatched: card.isNotMatched, settings: settings)
+            .cardMod(isSelected: card.isSelected, settings: settings, state: card.state)
     }
 }
 

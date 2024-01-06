@@ -35,7 +35,7 @@ struct SetCard: CustomStringConvertible {
 
 extension SetCard: Matchable {
     
-    static func match(cards: [SetCard]) -> Bool {
+    static func isSet(cards: [SetCard]) -> Bool {
         guard cards.count == 3 else { return false }
         let sum = [
             cards.reduce(0, { $0 + $1.number.rawValue }),

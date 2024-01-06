@@ -1,5 +1,5 @@
 //
-//  ButtonFy.swift
+//  ButtonModifier.swift
 //  SetGame
 //
 //  Created by Саша Восколович on 05.01.2024.
@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct ButtonFy: ViewModifier {
-    
-    
+struct ButtonModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
@@ -22,7 +20,7 @@ struct ButtonFy: ViewModifier {
 }
 
 extension View {
-    func greenButtonFy() -> some View {
-        modifier(ButtonFy())
+    func greenButton() -> some View {
+        modifier(ButtonModifier())
     }
 }
