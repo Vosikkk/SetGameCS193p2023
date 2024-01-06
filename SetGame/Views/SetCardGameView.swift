@@ -11,14 +11,8 @@ struct SetCardGameView: View {
    
     typealias Card = SetGame<SetCard>.Card
     
-    @StateObject var setGame = SetCardGame()
+    @ObservedObject var setGame: SetCardGame
     @State private var shouldDelay: Bool = true
-    
-    private let aspectRatio: CGFloat = 2.0/3.0
-    private let spasing: CGFloat = 4
-    private let cardTrasitionDelay: Double = 0.2
-    
-   
     
     var body: some View {
         VStack {
@@ -26,19 +20,7 @@ struct SetCardGameView: View {
                 deck
                 Spacer()
             }
-            GeometryReader { geometry in
-                AspectVGrid(items: setGame.cards, aspectRatio: aspectRatio) { card in
-                    CardView(card: card, settings: $setGame.settings)
-                        .transition(.cardTransition(size: geometry.size)) // Змініть анімацію
-//                        .animation( Animation.easeInOut(duration: 1.00)
-//                                                                  .delay(transitionDelay(card: card)))
-                       
-                        .onTapGesture {
-                            setGame.choose(card: card)
-                        }
-                        .padding(spasing)
-                }
-            }
+            cards
             .onAppear {
                 deal()
             }
@@ -53,34 +35,29 @@ struct SetCardGameView: View {
         .foregroundStyle(.white)
         .font(.headline)
         .padding()
-        .background(tableColor.ignoresSafeArea(.all))
+        .background(setGame.colorOfMainTheme.ignoresSafeArea(.all))
+    }
+        
+    
+    private var cards: some View {
+        GeometryReader { geometry in
+            AspectVGrid(items: setGame.cards, aspectRatio: Constants.aspectRatio) { card in
+                CardView(card: card, settings: $setGame.settings)
+                    .transition(.cardTransition(size: geometry.size))
+//                        .animation( Animation.easeInOut(duration: 1.00)
+//                                                                  .delay(transitionDelay(card: card)))
+                    .onTapGesture {
+                        setGame.choose(card: card)
+                    }
+                    .padding(Constants.spasing)
+            }
+        }
     }
     
-    
-    private func deal() {
-        setGame.deal()
-    }
-    
-    private var tableColor: Color {
-        Color(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1))
-    }
-    
-    private func getThree() {
-        setGame.giveThreeCards()
-    }
-    
-    private func newGame() {
-        setGame.newGame()
-        deal()
-    }
-   
-    private func transitionDelay(card: Card) -> Double {
-        guard shouldDelay else { return 0 }
-        return Double(setGame.cards.getIndex(matching: card)!) * cardTrasitionDelay
-    }
     
     private var deck: some View {
         Text("Deck: \(setGame.cardsInDeck)")
+            .animation(nil)
     }
     
     private var hintButton: some View {
@@ -105,25 +82,39 @@ struct SetCardGameView: View {
         }
         .greenButton()
     }
-}
-
-
-struct CardView: View {
-    typealias Card = SetGame<SetCard>.Card
-    var card: Card
-    @Binding var settings: Setting
-   
     
-    var body: some View {
-        SetCardView(card: card.content, settings: settings)
-            .cardMod(isSelected: card.isSelected, settings: settings, state: card.state)
+    private func deal() {
+        withAnimation(.bouncy(duration: 0.7, extraBounce: 0.3)) {
+            setGame.deal()
+        }
+    }
+
+    
+    private func getThree() {
+        withAnimation(.interactiveSpring(response: 1, dampingFraction: 0.5)) {
+            setGame.giveThreeCards()
+        }
+    }
+    
+    private func newGame() {
+        setGame.newGame()
+        deal()
+    }
+   
+    private func transitionDelay(card: Card) -> Double {
+        guard shouldDelay else { return 0 }
+        return Double(setGame.cards.getIndex(matching: card)!) * Constants.cardTrasitionDelay
+    }
+    private struct Constants {
+        static let aspectRatio: CGFloat = 2/3
+        static let spasing: CGFloat = 4
+        static let cardTrasitionDelay: Double = 0.2
     }
 }
 
 
-
 #Preview {
-    SetCardGameView()
+    SetCardGameView(setGame: SetCardGame())
 }
 
 extension AnyTransition {
@@ -143,8 +134,4 @@ extension AnyTransition {
                height: CGFloat.random(in: -2 * size.height...(-size.height)))
     }
 }
-extension Animation {
-    static func spin(duration: TimeInterval) -> Animation {
-        .easeInOut(duration: duration).repeatForever(autoreverses: false)
-    }
-}
+

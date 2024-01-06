@@ -25,7 +25,8 @@ struct CardModifier: ViewModifier, Animatable {
                 .background(base.fill(state == .hint ? settings.colorHint : .white))
                 .overlay(content)
         }
-
+        .scaleEffect(isSelected ? 1.1 : 1.0)
+        .animation(.linear, value: isSelected)
     }
     
     private func highlightColor() -> Color {

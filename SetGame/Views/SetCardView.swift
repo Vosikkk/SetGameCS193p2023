@@ -12,22 +12,20 @@ struct SetCardView: View {
     var card: SetCard
     var settings: Setting
     
-    
     var body: some View {
         GeometryReader { geometry in
             VStack {
                 Spacer()
                 ForEach(0..<card.number.rawValue, id: \.self) { index in
                     cardShape()
-                        .frame(height: card.number.rawValue < 3 ? geometry.size.height / 4.0 : (geometry.size.height - 30) / CGFloat(card.number.rawValue))
-                
+                        .frame(height: card.number.rawValue < 3 ? geometry.size.height / 4.0 : (geometry.size.height - Constants.offset) / CGFloat(card.number.rawValue))
                 }
                 Spacer()
             }
         }
-        .padding(6)
+        .padding(Constants.inset)
         .foregroundStyle(settings.colorsShape[card.number.rawValue - 1])
-        .aspectRatio(2/3, contentMode: .fit)
+        .aspectRatio(Constants.aspectRatio, contentMode: .fit)
     }
     
     @ViewBuilder private func cardShape() -> some View {
@@ -41,7 +39,7 @@ struct SetCardView: View {
     
     @ViewBuilder private func shapeFill<setShape>(shape: setShape) -> some View where setShape: Shape {
         switch fillInSet(card: card) {
-        case .stroke: shape.stroke(lineWidth: lineWidth)
+        case .stroke: shape.stroke(lineWidth: Constants.lineWidth)
         case .fill:   shape.fillPlusBorder()
         case .stripe: shape.stripe()
         default: Capsule()
@@ -56,7 +54,12 @@ struct SetCardView: View {
         settings.fillForShapes[card.fill.rawValue - 1]
     }
     
-    private let lineWidth: CGFloat = 3
+    private struct Constants {
+        static let lineWidth: CGFloat = 3
+        static let aspectRatio: CGFloat = 2/3
+        static let offset: CGFloat = 30
+        static let inset: CGFloat = 6
+    }
 }
 
 #Preview {
