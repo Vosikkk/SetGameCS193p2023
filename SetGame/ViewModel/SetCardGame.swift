@@ -41,9 +41,15 @@ class SetCardGame: ObservableObject {
         game.deck.count
     }
     
+    var deckCards: [Card] {
+        game.deck
+    }
+    
+    
     var cards: [Card] {
         game.cards
     }
+    
     
     var hintCount: String {
         "Hints: \(game.hints.count) / \(game.hintsCount + 1)"
@@ -59,6 +65,11 @@ class SetCardGame: ObservableObject {
     func deal() {
         game.deal()
     }
+    
+    
+    
+    
+    
     
     func newGame() {
         game = SetCardGame.createGame()

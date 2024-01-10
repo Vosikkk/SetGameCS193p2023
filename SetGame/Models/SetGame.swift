@@ -59,10 +59,14 @@ struct SetGame<Content> where Content: Matchable {
         self.numberOfCardsToStart = numberOfCardsToStart
         for index in 0..<numberOfCardsInDeck {
             let content = cardContentFactory(index)
-            deck.append(Card(content: content, id: index))
+            deck.append(Card(content: content))
         }
         deck.shuffle()
     }
+    
+    
+    
+    
     
     
     mutating func deal(_ numberOfCards: Int? = nil) {
@@ -153,20 +157,11 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     
-//    struct Card: Identifiable {
-//        var isSelected: Bool = false
-//        var isMatched: Bool = false
-//        var isNotMatched: Bool = false
-//        var isHint: Bool = false
-//        var content: Content
-//        var id: Int
-//    }
-    
     struct Card: Identifiable {
         var isSelected: Bool = false
         var state: CardState = .normal
         var content: Content
-        var id: Int
+        var id = UUID()
     }
     enum CardState {
         case normal, matched, notMatched, hint

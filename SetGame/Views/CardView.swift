@@ -15,8 +15,9 @@ struct CardView: View {
    
     
     var body: some View {
-        SetCardView(card: card.content, settings: settings)
-            .cardMod(isSelected: card.isSelected, settings: settings, state: card.state)
-    }
+            SetCardView(card: card.content, settings: settings)
+                .cardMod(isSelected: card.isSelected, settings: settings, state: card.state)
+        }
+    
 }
 

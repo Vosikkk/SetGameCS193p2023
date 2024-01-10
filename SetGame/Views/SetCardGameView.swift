@@ -12,22 +12,23 @@ struct SetCardGameView: View {
     typealias Card = SetGame<SetCard>.Card
     
     @ObservedObject var setGame: SetCardGame
-    @State private var shouldDelay: Bool = true
+    
+    @Namespace private var dealingNamesSpace
+    
+    @State var count = 0
+    
     
     var body: some View {
         VStack {
             HStack {
-                deck
+                deckCountLabel
                 Spacer()
             }
             cards
-            .onAppear {
-                deal()
-            }
             HStack() {
                 hintButton
                 Spacer()
-                dealButton
+                deck
                 Spacer()
                 newGameButton
             }
@@ -40,22 +41,22 @@ struct SetCardGameView: View {
         
     
     private var cards: some View {
-        GeometryReader { geometry in
             AspectVGrid(items: setGame.cards, aspectRatio: Constants.aspectRatio) { card in
-                CardView(card: card, settings: $setGame.settings)
-                    .transition(.cardTransition(size: geometry.size))
-//                        .animation( Animation.easeInOut(duration: 1.00)
-//                                                                  .delay(transitionDelay(card: card)))
-                    .onTapGesture {
-                        setGame.choose(card: card)
-                    }
-                    .padding(Constants.spasing)
+                if isDealt(card) {
+                    CardView(card: card, settings: $setGame.settings)
+                        .matchedGeometryEffect(id: card.id, in: dealingNamesSpace)
+                        .transition(.asymmetric(insertion: .identity, removal: .identity))
+                        .padding(Constants.spasing)
+                        
+                        .onTapGesture {
+                            setGame.choose(card: card)
+                        }
+                }
             }
-        }
     }
     
     
-    private var deck: some View {
+    private var deckCountLabel: some View {
         Text("Deck: \(setGame.cardsInDeck)")
             .animation(nil)
     }
@@ -84,11 +85,41 @@ struct SetCardGameView: View {
     }
     
     private func deal() {
-        withAnimation(.bouncy(duration: 0.7, extraBounce: 0.3)) {
-            setGame.deal()
+        var delay: TimeInterval = 0
+        for card in setGame.cards {
+            withAnimation(.easeInOut(duration: 1).delay(delay)) {
+                _ = dealt.insert(card.id)
+            }
+            
+            delay += 0.15
         }
     }
 
+    
+    private var deck: some View {
+        ZStack {
+            ForEach(undealtCards) { card in
+                CardView(card: card, settings: $setGame.settings)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamesSpace)
+                    .transition(.asymmetric(insertion: .identity, removal: .identity))
+            }
+        }
+        .frame(width: 50, height: 50 / Constants.aspectRatio)
+        .onTapGesture {
+            deal()
+        }
+    }
+    
+    private var undealtCards: [Card] {
+        setGame.deckCards.filter { !isDealt($0) }
+    }
+    
+    
+    private func isDealt(_ card: Card) -> Bool {
+        dealt.contains(card.id)
+    }
+    
+    @State private var dealt: Set<Card.ID> = []
     
     private func getThree() {
         withAnimation(.interactiveSpring(response: 1, dampingFraction: 0.5)) {
@@ -101,14 +132,15 @@ struct SetCardGameView: View {
         deal()
     }
    
-    private func transitionDelay(card: Card) -> Double {
-        guard shouldDelay else { return 0 }
-        return Double(setGame.cards.getIndex(matching: card)!) * Constants.cardTrasitionDelay
-    }
+    
     private struct Constants {
         static let aspectRatio: CGFloat = 2/3
         static let spasing: CGFloat = 4
         static let cardTrasitionDelay: Double = 0.2
+        
+        struct DeckSize {
+            static let width: CGFloat = 50
+        }
     }
 }
 
@@ -116,22 +148,3 @@ struct SetCardGameView: View {
 #Preview {
     SetCardGameView(setGame: SetCardGame())
 }
-
-extension AnyTransition {
-    
-    static func cardTransition(size: CGSize) -> AnyTransition {
-        let insertion = AnyTransition.offset(flyFrom(for: size))
-        let removal = AnyTransition.offset(flyTo(for: size))
-            .combined(with: AnyTransition.scale(scale: 0.5))
-        return .asymmetric(insertion: insertion, removal: removal)
-    }
-    
-    static func flyFrom(for size: CGSize) -> CGSize {
-        CGSize(width: 0.0, height: size.height)
-    }
-    static func flyTo(for size: CGSize) -> CGSize {
-        CGSize(width: CGFloat.random(in: -3 * size.width...3 * size.width),
-               height: CGFloat.random(in: -2 * size.height...(-size.height)))
-    }
-}
-
