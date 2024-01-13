@@ -33,8 +33,8 @@ class SetCardGame: ObservableObject {
     
     static var numberOfCardsToStart = 12
    
-    var colorOfMainTheme: Color {
-        settings.tableColor
+    var colorOfMainTheme: RadialGradient {
+        settings.gradientForTable
     }
     
     var cardsInDeck: Int {
@@ -74,7 +74,7 @@ class SetCardGame: ObservableObject {
         game = SetCardGame.createGame()
     }
     
-    func giveThreeCards() {
+    func dealThree() {
         game.deal(3)
     }
     
@@ -100,6 +100,18 @@ struct Setting {
     let tableColor: Color = Color(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1))
     
     let deckColor: Color = .purple
+    
+    
+    let gradientForTable: RadialGradient = RadialGradient(
+        gradient: Gradient(colors: [
+            Color(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)),
+            Color(UIColor(red: 0, green: 1, blue: 0, alpha: 1))
+        ]),
+        center: .center,
+        startRadius: 0,
+        endRadius: 500
+    )
+    
     
     enum FillInSet: Int, CaseIterable {
         case stroke = 1
