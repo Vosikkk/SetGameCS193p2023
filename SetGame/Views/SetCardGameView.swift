@@ -15,7 +15,7 @@ struct SetCardGameView: View {
     
     @Namespace private var dealingNamesSpace
     
-    @State var count = 0
+    @State var firstDeal: Bool = true
     
     
     var body: some View {
@@ -33,26 +33,37 @@ struct SetCardGameView: View {
                 newGameButton
             }
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(.secondary)
         .font(.headline)
         .padding()
-        .background(setGame.colorOfMainTheme.ignoresSafeArea(.all))
+        .background(
+                RadialGradient(
+                    gradient: Gradient(colors: [
+                        Color(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)),
+                        Color(UIColor(red: 0, green: 1, blue: 0, alpha: 1))
+                    ]),
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: 500
+                )
+                .ignoresSafeArea()
+            )
+        // .background(setGame.colorOfMainTheme.ignoresSafeArea(.all))
     }
         
     
     private var cards: some View {
-            AspectVGrid(items: setGame.cards, aspectRatio: Constants.aspectRatio) { card in
-                if isDealt(card) {
-                    CardView(card: card, settings: $setGame.settings)
-                        .matchedGeometryEffect(id: card.id, in: dealingNamesSpace)
-                        .transition(.asymmetric(insertion: .identity, removal: .identity))
-                        .padding(Constants.spasing)
-                        
-                        .onTapGesture {
-                            setGame.choose(card: card)
-                        }
-                }
+        AspectVGrid(items: setGame.cards, aspectRatio: Constants.aspectRatio) { card in
+            if isDealt(card) {
+                CardView(card: card, settings: $setGame.settings)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamesSpace)
+                    .transition(.asymmetric(insertion: .identity, removal: .identity))
+                    .padding(Constants.spasing)
+                    .onTapGesture {
+                        setGame.choose(card: card)
+                    }
             }
+        }
     }
     
     
@@ -85,26 +96,34 @@ struct SetCardGameView: View {
     }
     
     private func deal() {
+        firstDeal ? setGame.deal() : setGame.giveThreeCards()
+        
         var delay: TimeInterval = 0
+        
         for card in setGame.cards {
-            withAnimation(.easeInOut(duration: 1).delay(delay)) {
+              withAnimation(.easeInOut(duration: 1).delay(delay)) {
                 _ = dealt.insert(card.id)
+                  withAnimation(.easeInOut(duration: 0.5).delay(delay * 2)) {
+                      setGame.flipCardToFaceUp(card: card)
+                  }
             }
-            
+           
             delay += 0.15
         }
+        firstDeal = false
     }
 
-    
+        
     private var deck: some View {
         ZStack {
             ForEach(undealtCards) { card in
                 CardView(card: card, settings: $setGame.settings)
                     .matchedGeometryEffect(id: card.id, in: dealingNamesSpace)
                     .transition(.asymmetric(insertion: .identity, removal: .identity))
+                   
             }
         }
-        .frame(width: 50, height: 50 / Constants.aspectRatio)
+        .frame(width: Constants.DeckSize.width, height: Constants.DeckSize.width / Constants.aspectRatio)
         .onTapGesture {
             deal()
         }
@@ -129,9 +148,9 @@ struct SetCardGameView: View {
     
     private func newGame() {
         setGame.newGame()
-        deal()
+//        dealt = []
+//        deal()
     }
-   
     
     private struct Constants {
         static let aspectRatio: CGFloat = 2/3

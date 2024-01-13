@@ -11,12 +11,26 @@ import SwiftUI
 struct CardModifier: ViewModifier, Animatable {
     
     var animatableData: Double {
-        0
+        get { rotation }
+        set { rotation = newValue }
     }
     
+    
+    var rotation: Double
+    var isFaceUp: Bool {
+        rotation < 90
+    }
     var isSelected: Bool
     var settings: Setting
     var state: SetGame<SetCard>.CardState
+    
+    init(isFaceUp: Bool, isSelected: Bool, settings: Setting, state: SetGame<SetCard>.CardState) {
+        self.isSelected = isSelected
+        self.settings = settings
+        self.state = state
+        rotation = isFaceUp ? 0 : 180
+    }
+    
     
     func body(content: Content) -> some View {
         ZStack {
@@ -24,9 +38,16 @@ struct CardModifier: ViewModifier, Animatable {
             base.strokeBorder(highlightColor(), lineWidth: borderLineWidth)
                 .background(base.fill(state == .hint ? settings.colorHint : .white))
                 .overlay(content)
+                .opacity(isFaceUp ? 1 : 0)
+            base.fill(settings.deckColor)
+                .opacity(isFaceUp ? 0 : 1)
         }
         .scaleEffect(isSelected ? 1.1 : 1.0)
         .animation(.linear, value: isSelected)
+        .rotation3DEffect(
+            .degrees(rotation),
+            axis: (x: 0.0, y: 1.0, z: 0.0)
+        )
     }
     
     private func highlightColor() -> Color {
@@ -50,7 +71,7 @@ struct CardModifier: ViewModifier, Animatable {
 }
 
 extension View {
-    func cardMod(isSelected: Bool, settings: Setting,  state: SetGame<SetCard>.CardState ) -> some View {
-        modifier(CardModifier(isSelected: isSelected, settings: settings, state: state))
+    func cardMod(isSelected: Bool, settings: Setting, isFaceUp: Bool,  state: SetGame<SetCard>.CardState) -> some View {
+        modifier(CardModifier(isFaceUp: isFaceUp, isSelected: isSelected, settings: settings, state: state))
     }
 }

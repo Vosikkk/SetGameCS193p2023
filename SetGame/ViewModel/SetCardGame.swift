@@ -20,7 +20,7 @@ class SetCardGame: ObservableObject {
     
     
     static func createGame() -> Game {
-        Game(numberOfCardsToStart: numberOfCardsToStart, numberOfCardsInDeck: deck.cards.count) { index in
+        return Game(numberOfCardsToStart: numberOfCardsToStart, numberOfCardsInDeck: deck.cards.count) { index in
             deck.cards[index]
         }
     }
@@ -47,7 +47,7 @@ class SetCardGame: ObservableObject {
     
     
     var cards: [Card] {
-        game.cards
+        game.cardsOnTheTable
     }
     
     
@@ -66,10 +66,9 @@ class SetCardGame: ObservableObject {
         game.deal()
     }
     
-    
-    
-    
-    
+    func flipCardToFaceUp(card: Card) {
+        game.flipCard(card: card)
+    }
     
     func newGame() {
         game = SetCardGame.createGame()
@@ -92,7 +91,7 @@ struct Setting {
     let colorsShape: [Color] = [.red, .green, .purple]
     let colorsBorder: [Color] = [#colorLiteral(red: 0.1940105259, green: 0.003823338309, blue: 0.9934375882, alpha: 1),#colorLiteral(red: 0.9955675006, green: 0.001091319602, blue: 0.1432448924, alpha: 1),#colorLiteral(red: 0.9914981723, green: 0.9005147815, blue: 0.01922592521, alpha: 1)].map { Color($0) }
     
-    let fillForShapes = [FillInSet.stroke, .stripe, .fill]
+    let fillForShapes = [FillInSet.stroke, .stripe, FillInSet.fill]
     
     let shapes = [ShapesInSet.diamond, .oval, .squiggle]
     
@@ -100,18 +99,19 @@ struct Setting {
     
     let tableColor: Color = Color(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1))
     
+    let deckColor: Color = .purple
     
     enum FillInSet: Int, CaseIterable {
         case stroke = 1
         case fill
         case stripe
-        case blur
+       // case blur
     }
     
     enum ShapesInSet: Int, CaseIterable {
             case diamond = 1
             case oval
             case squiggle
-            case rainDrop
+           // case rainDrop
     }
 }

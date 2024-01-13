@@ -16,8 +16,7 @@ struct CardView: View {
     
     var body: some View {
             SetCardView(card: card.content, settings: settings)
-                .cardMod(isSelected: card.isSelected, settings: settings, state: card.state)
-        }
-    
+                .cardMod(isSelected: card.isSelected, settings: settings, isFaceUp: card.isFaceUp, state: card.state)
+    }
 }
 

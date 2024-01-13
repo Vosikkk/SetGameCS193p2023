@@ -17,14 +17,13 @@ struct SetCardView: View {
             VStack {
                 Spacer()
                 ForEach(0..<card.number.rawValue, id: \.self) { index in
-                    cardShape()
-                        .frame(height: card.number.rawValue < 3 ? geometry.size.height / 4.0 : (geometry.size.height - Constants.offset) / CGFloat(card.number.rawValue))
+                    cardShape().frame(height: card.number.rawValue < 3 ? geometry.size.height / 4.0 : (geometry.size.height - Constants.offset) / CGFloat(card.number.rawValue))
                 }
                 Spacer()
             }
         }
         .padding(Constants.inset)
-        .foregroundStyle(settings.colorsShape[card.number.rawValue - 1])
+        .foregroundStyle(settings.colorsShape[card.color.rawValue - 1])
         .aspectRatio(Constants.aspectRatio, contentMode: .fit)
     }
     
@@ -33,7 +32,6 @@ struct SetCardView: View {
         case .diamond: shapeFill(shape: Diamond())
         case .oval: shapeFill(shape: Capsule())
         case .squiggle: shapeFill(shape: Squiggle())
-        default: Capsule()
         }
     }
     
@@ -42,7 +40,6 @@ struct SetCardView: View {
         case .stroke: shape.stroke(lineWidth: Constants.lineWidth)
         case .fill:   shape.fillPlusBorder()
         case .stripe: shape.stripe()
-        default: Capsule()
         }
     }
     
@@ -57,13 +54,13 @@ struct SetCardView: View {
     private struct Constants {
         static let lineWidth: CGFloat = 3
         static let aspectRatio: CGFloat = 2/3
-        static let offset: CGFloat = 30
+        static let offset: CGFloat = 32
         static let inset: CGFloat = 6
     }
 }
 
 #Preview {
-    SetCardView(card: SetCard(number: .v1, color: .v2, shape: .v1, fill: .v1), settings: Setting())
+    SetCardView(card: SetCard(number: .v3, color: .v3, shape: .v2, fill: .v3), settings: Setting())
         .overlay(
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color.blue, lineWidth: 2)
