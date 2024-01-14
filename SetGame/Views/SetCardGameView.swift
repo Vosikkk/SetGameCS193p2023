@@ -56,7 +56,12 @@ struct SetCardGameView: View {
                     .padding(Constants.spasing)
                     .onTapGesture {
                         setGame.choose(card: card)
+                        if !onWayToTheTableCards.isEmpty {
+                            withAnimation {
+                                cardsGoFromTheDeck()
+                        }
                     }
+                }
             }
         }
     }
@@ -111,13 +116,16 @@ struct SetCardGameView: View {
     // MARK: - Animations
     
     private func deal() {
-        
         performDealAction()
-        
         firstDeal = false
+        cardsGoFromTheDeck()
+    }
+    
+    
+    func cardsGoFromTheDeck() {
         
         var delay: TimeInterval = 0
-        
+       
         for card in onWayToTheTableCards {
             // Cards go on the table
             withAnimation(
@@ -152,8 +160,8 @@ struct SetCardGameView: View {
         dealt.contains(card.id)
     }
     
+    // first deal contains 12 cards then only three
     private func performDealAction() {
-        // first deal contains 12 cards then only three
         firstDeal ? setGame.deal() : setGame.dealThree()
     }
     

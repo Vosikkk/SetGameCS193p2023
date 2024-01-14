@@ -15,7 +15,7 @@ struct SetGame<Content> where Content: Matchable {
     
     private(set) var cardsOnTheTable: [Card] = []
     private(set) var deck: [Card] = []
-    
+    private(set) var discardPile: [Card] = []
     
     let numberOfCardsToMatch = 3
     var numberOfCardsToStart = 12
@@ -29,6 +29,7 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     var hintsCount: Int = 0
+    
     
     
     var hints: [[Int]] {
@@ -75,41 +76,35 @@ struct SetGame<Content> where Content: Matchable {
     mutating func deal(_ numberOfCards: Int? = nil) {
         let amount = numberOfCards ?? numberOfCardsToStart
         for _ in 0..<amount {
-            cardsOnTheTable.append(deck.remove(at: 0))
+            cardsOnTheTable.append(deck.removeFirst())
         }
     }
     
     mutating func choose(card: Card) {
-        if let chosenIndex = cardsOnTheTable.getIndex(matching: card), !cardsOnTheTable[chosenIndex].isSelected, cardsOnTheTable[chosenIndex].state == .normal {
+        if let chosenIndex = cardsOnTheTable.getIndex(matching: card), 
+            !cardsOnTheTable[chosenIndex].isSelected,
+            cardsOnTheTable[chosenIndex].state == .normal {
            
             // Chosen 2 cards
             if selectedIndices.count == 2 {
                 cardsOnTheTable[chosenIndex].isSelected = true
-                
-                if Content.isSet(cards: selectedIndices.map { cardsOnTheTable[$0].content }) {
-                    // Matched
-                    for index in selectedIndices {
-                        cardsOnTheTable[index].state = .matched
-                    }
-                } else {
-                    // Not matched
-                    for index in selectedIndices {
-                        cardsOnTheTable[index].state = .notMatched
-                    }
-                }
+                handleMatchDisMatch()
             } else {
                 // other count of selected
                 if selectedIndices.count == 1 || selectedIndices.count == 0 {
                     cardsOnTheTable[chosenIndex].isSelected = true
                 } else {
+                    addCardsToDiscardPile()
                     changeCards()
                     onlySelectedCard(chosenIndex)
                 }
                 
             }
             // Disselected card
-        } else if let chosenIndex = cardsOnTheTable.getIndex(matching: card), cardsOnTheTable[chosenIndex].isSelected,
-                  cardsOnTheTable[chosenIndex].state == .normal {
+        } else if let chosenIndex = cardsOnTheTable.getIndex(matching: card), 
+                    cardsOnTheTable[chosenIndex].isSelected,
+                    cardsOnTheTable[chosenIndex].state == .normal {
+           
             cardsOnTheTable[chosenIndex].isSelected = false
         }
     }
@@ -122,6 +117,14 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     
+    private mutating func handleMatchDisMatch() {
+        let match = Content.isSet(cards: selectedIndices.map { cardsOnTheTable[$0].content })
+        for index in selectedIndices {
+            cardsOnTheTable[index].state = match ? .matched : .notMatched
+        }
+    }
+    
+    
     private mutating func changeCards() {
         guard matchedIndices.count == numberOfCardsToMatch else { return }
         let replaceIndices = matchedIndices
@@ -129,8 +132,7 @@ struct SetGame<Content> where Content: Matchable {
         if deck.count >= numberOfCardsToMatch && cardsOnTheTable.count == numberOfCardsToStart {
             // replace
             for index in replaceIndices {
-                cardsOnTheTable.remove(at: index)
-                cardsOnTheTable.insert(deck.remove(at: 0), at: index)
+                cardsOnTheTable[index] = deck.removeFirst()
             }
         } else {
             // remove
@@ -140,6 +142,11 @@ struct SetGame<Content> where Content: Matchable {
         }
     }
     
+    mutating private func addCardsToDiscardPile() {
+        for index in matchedIndices {
+            discardPile.append(cardsOnTheTable[index])
+        }
+    }
     
     mutating func hint() {
         if hints.count != 0 && hintsCount < hints.count {

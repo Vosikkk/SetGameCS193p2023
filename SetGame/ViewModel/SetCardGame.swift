@@ -50,6 +50,9 @@ class SetCardGame: ObservableObject {
         game.cardsOnTheTable
     }
     
+    var discard: [Card] {
+        game.discardPile
+    }
     
     var hintCount: String {
         "Hints: \(game.hints.count) / \(game.hintsCount + 1)"
@@ -91,7 +94,7 @@ struct Setting {
     let colorsShape: [Color] = [.red, .green, .purple]
     let colorsBorder: [Color] = [#colorLiteral(red: 0.1940105259, green: 0.003823338309, blue: 0.9934375882, alpha: 1),#colorLiteral(red: 0.9955675006, green: 0.001091319602, blue: 0.1432448924, alpha: 1),#colorLiteral(red: 0.9914981723, green: 0.9005147815, blue: 0.01922592521, alpha: 1)].map { Color($0) }
     
-    let fillForShapes = [FillInSet.stroke, .stripe, FillInSet.fill]
+    let fillForShapes = [FillInSet.stroke, .stripe, .fill]
     
     let shapes = [ShapesInSet.diamond, .oval, .squiggle]
     
