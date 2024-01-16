@@ -53,7 +53,6 @@ struct SetGame<Content> where Content: Matchable {
     
     
     
-    
     init(numberOfCardsToStart: Int, numberOfCardsInDeck: Int, cardContentFactory: (Int) -> Content) {
         cardsOnTheTable = []
         deck = []
@@ -67,7 +66,7 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     mutating func flipCard(card: Card) {
-        if let cardForFlipIndex = cardsOnTheTable.getIndex(matching: card) {
+        if let cardForFlipIndex = cardsOnTheTable.getIndex(of: card) {
             cardsOnTheTable[cardForFlipIndex].isFaceUp = true
         }
     }
@@ -81,33 +80,43 @@ struct SetGame<Content> where Content: Matchable {
     }
     
     mutating func choose(card: Card) {
-        if let chosenIndex = cardsOnTheTable.getIndex(matching: card), 
-            !cardsOnTheTable[chosenIndex].isSelected,
-            cardsOnTheTable[chosenIndex].state == .normal {
+        if let chosenIndex = cardsOnTheTable.getIndex(of: card), 
+           isSelectedAndNoramlState(cardBy: chosenIndex, selected: false) {
            
             // Chosen 2 cards
             if selectedIndices.count == 2 {
                 cardsOnTheTable[chosenIndex].isSelected = true
                 handleMatchDisMatch()
+                if matchedIndices.count == numberOfCardsToMatch {
+                    // made auto cards to discard and get new cards
+                    addCardsToDiscardPile()
+                    changeCards()
+                }
+                
             } else {
                 // other count of selected
                 if selectedIndices.count == 1 || selectedIndices.count == 0 {
                     cardsOnTheTable[chosenIndex].isSelected = true
                 } else {
-                    addCardsToDiscardPile()
-                    changeCards()
+                   // changeCards()
                     onlySelectedCard(chosenIndex)
                 }
                 
             }
             // Disselected card
-        } else if let chosenIndex = cardsOnTheTable.getIndex(matching: card), 
-                    cardsOnTheTable[chosenIndex].isSelected,
-                    cardsOnTheTable[chosenIndex].state == .normal {
+        } else if let chosenIndex = cardsOnTheTable.getIndex(of: card), 
+                    isSelectedAndNoramlState(cardBy: chosenIndex, selected: true) {
            
             cardsOnTheTable[chosenIndex].isSelected = false
         }
     }
+    
+    
+    private func isSelectedAndNoramlState(cardBy index: Int, selected: Bool) -> Bool {
+        return selected ? cardsOnTheTable[index].isSelected : !cardsOnTheTable[index].isSelected 
+        && cardsOnTheTable[index].state == .normal
+    }
+    
     
     private mutating func onlySelectedCard(_ chosenIndex: Int) {
         for index in cardsOnTheTable.indices {
@@ -119,32 +128,40 @@ struct SetGame<Content> where Content: Matchable {
     
     private mutating func handleMatchDisMatch() {
         let match = Content.isSet(cards: selectedIndices.map { cardsOnTheTable[$0].content })
-        for index in selectedIndices {
-            cardsOnTheTable[index].state = match ? .matched : .notMatched
-        }
+        updateCardStates(isMatch: match)
     }
     
+    private mutating func updateCardStates(isMatch: Bool) {
+        for index in selectedIndices {
+            cardsOnTheTable[index].state = isMatch ? .matched : .notMatched
+        }
+    }
     
     private mutating func changeCards() {
         guard matchedIndices.count == numberOfCardsToMatch else { return }
         let replaceIndices = matchedIndices
+       
         hintsCount = 0
         if deck.count >= numberOfCardsToMatch && cardsOnTheTable.count == numberOfCardsToStart {
             // replace
             for index in replaceIndices {
                 cardsOnTheTable[index] = deck.removeFirst()
             }
+           
         } else {
             // remove
             cardsOnTheTable = cardsOnTheTable.enumerated()
                 .filter { !replaceIndices.contains($0.offset) }
                 .map { $0.element }
         }
+      
     }
     
     mutating private func addCardsToDiscardPile() {
         for index in matchedIndices {
-            discardPile.append(cardsOnTheTable[index])
+            var card = cardsOnTheTable[index]
+            resetCardState(&card)
+            discardPile.append(card)
         }
     }
     
@@ -154,7 +171,7 @@ struct SetGame<Content> where Content: Matchable {
                 cardsOnTheTable[index].state = .hint
             }
             hintsCount += 1
-            hintsCount = hintsCount < hints.count ? hintsCount : 0
+            hintsCount = hintsCount % hints.count /*hintsCount < hints.count ? hintsCount : 0*/
         }
     }
     
@@ -162,10 +179,15 @@ struct SetGame<Content> where Content: Matchable {
         if hints.count != 0 {
             for index in 0..<cardsOnTheTable.count {
                 cardsOnTheTable[index].state = .normal
+                cardsOnTheTable[index].isSelected = false
             }
         }
     }
     
+    mutating private func resetCardState(_ card: inout Card) {
+        card.state = .normal
+        card.isSelected = false
+    }
     
     struct Card: Identifiable {
         var isSelected: Bool = false
@@ -180,9 +202,9 @@ struct SetGame<Content> where Content: Matchable {
 }
 
 extension Array where Element: Identifiable {
-    func getIndex(matching: Element) -> Int? {
+    func getIndex(of: Element) -> Int? {
         for index in 0..<self.count {
-            if self[index].id == matching.id {
+            if self[index].id == of.id {
                 return index
             }
         }

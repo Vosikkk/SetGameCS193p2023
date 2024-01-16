@@ -15,6 +15,8 @@ struct SetCardGameView: View {
     
     @Namespace private var dealingNamesSpace
     
+    @Namespace private var discardNamesSpace
+    
     @State private var dealt: Set<Card.ID> = []
     
     @State var firstDeal: Bool = true
@@ -27,14 +29,15 @@ struct SetCardGameView: View {
             HStack {
                 deckCountLabel
                 Spacer()
+                hintButton
             }
             cards
             HStack() {
-                hintButton
-                Spacer()
-                deck
+                discardDeck
                 Spacer()
                 newGameButton
+                Spacer()
+                deck
             }
         }
         .onAppear {
@@ -55,9 +58,9 @@ struct SetCardGameView: View {
                 view(for: card)
                     .padding(Constants.spasing)
                     .onTapGesture {
-                        setGame.choose(card: card)
-                        if !onWayToTheTableCards.isEmpty {
-                            withAnimation {
+                        withAnimation {
+                            setGame.choose(card: card)
+                            if !onWayToTheTableCards.isEmpty {
                                 cardsGoFromTheDeck()
                         }
                     }
@@ -78,14 +81,6 @@ struct SetCardGameView: View {
         .greenButton()
     }
     
-//    private var dealButton: some View {
-//        Button("Deal+3") {
-//           
-//        }
-//        .greenButton()
-//        .disabled(setGame.cardsInDeck == 0)
-//        .foregroundStyle(setGame.cardsInDeck == 0 ? .gray : .white)
-//    }
     
     private var newGameButton: some View {
         Button("New Game") {
@@ -100,11 +95,29 @@ struct SetCardGameView: View {
                 view(for: card)
             }
         }
-        .frame(width: Constants.DeckSize.width, height: Constants.DeckSize.width / Constants.aspectRatio)
+        .frame(
+            width: Constants.DeckSize.width,
+            height: Constants.DeckSize.width / Constants.aspectRatio
+        )
         .onTapGesture {
             deal()
         }
     }
+   
+    private var discardDeck: some View {
+        ZStack {
+            ForEach(setGame.discard) { card in
+               view(for: card)
+                .zIndex(zIndex(for: card))
+                
+            }
+        }
+        .frame(
+            width: Constants.DeckSize.width,
+            height: Constants.DeckSize.width / Constants.aspectRatio
+        )
+    }
+    
     
     private func view(for card: Card) -> some View {
         CardView(card: card, settings: $setGame.settings)
@@ -163,6 +176,10 @@ struct SetCardGameView: View {
     // first deal contains 12 cards then only three
     private func performDealAction() {
         firstDeal ? setGame.deal() : setGame.dealThree()
+    }
+    
+    private func zIndex(for card: Card) -> Double {
+        Double(setGame.discard.firstIndex(where: { $0.id == card.id }) ?? 0)
     }
     
     private func newGame() {
