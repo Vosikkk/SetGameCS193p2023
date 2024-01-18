@@ -35,9 +35,10 @@
         func body(content: Content) -> some View {
             ZStack {
                 let base = RoundedRectangle(cornerRadius: cornerRadius)
-                base.strokeBorder(highlightColor(), lineWidth: borderLineWidth)
+                base.strokeBorder(.white, lineWidth: borderLineWidth)
                     .background(base.fill(state == .hint ? settings.colorHint : .white))
                     .overlay(content)
+                    
                     .opacity(isFaceUp ? 1 : 0)
                 base.fill(settings.deckColor)
                     .opacity(isFaceUp ? 0 : 1)
@@ -48,7 +49,6 @@
                 .degrees(rotation),
                 axis: (x: 0.0, y: 1.0, z: 0.0)
             )
-            .shakeEffect(with: state == .notMatched ? 1 : 0)
         }
         
         private func highlightColor() -> Color {
@@ -68,7 +68,7 @@
         }
         
         private let cornerRadius: CGFloat = 10
-        private let borderLineWidth: CGFloat = 5
+        private let borderLineWidth: CGFloat = 1
         private let downwardOffset: CGFloat = 200
     }
 

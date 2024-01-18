@@ -30,6 +30,7 @@ struct SetCardGameView: View {
                 hintButton
             }
             cards
+                .overlay(labelSet)
             HStack() {
                 discardDeck
                 Spacer()
@@ -38,6 +39,7 @@ struct SetCardGameView: View {
                 deck
             }
         }
+        
         .onAppear {
             deal()
         }
@@ -58,12 +60,12 @@ struct SetCardGameView: View {
                     .onTapGesture {
                         withAnimation {
                             setGame.choose(card: card)
-                       // } completion: {
+                        } completion: {
                             if !onWayToTheTableCards.isEmpty {
                                 cardsGoFromTheDeck()
                             }
                         }
-                }
+                    }
             }
         }
     }
@@ -123,6 +125,15 @@ struct SetCardGameView: View {
             .transition(.asymmetric(insertion: .identity, removal: .identity))
     }
     
+    private var labelSet: some View {
+            Text("Set🔥")
+            .font(.system(size: Constants.FontSize.labelFontSize))
+                .foregroundStyle(.blue)
+                .scaleEffect(setGame.isMatch ? 3 : 0)
+                .opacity(setGame.isMatch ? 1 : 0)
+                .transition(.scale)
+                .animation(.snappy(duration: Constants.Animation.labelSetDuration), value: setGame.isMatch)
+    }
     
     // MARK: - Animations
     
@@ -206,6 +217,10 @@ struct SetCardGameView: View {
             static let dealtDurantion: CGFloat = 1
             static let onWayDuration: CGFloat = 0.5
             static let delayOffset: CGFloat = 0.5
+            static let labelSetDuration: CGFloat = 0.3
+        }
+        struct FontSize {
+            static let labelFontSize: CGFloat = 30
         }
     }
 }

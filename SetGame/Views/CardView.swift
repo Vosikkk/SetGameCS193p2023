@@ -18,11 +18,8 @@ struct CardView: View {
             SetCardView(card: card.content, settings: settings)
                 .cardMod(isSelected: card.isSelected, settings: settings, isFaceUp: card.isFaceUp, state: card.state)
                 .transition(.scale)
+                .shakeEffect(with: card.state == .notMatched ? 1 : 0, isEnabled: card.state != .normal)
+                .zoomEffect(with: card.state == .matched ? 1 : 0)
     }
 }
 
-extension Animation {
-    static func spin(duration: TimeInterval) -> Animation {
-        .linear(duration: duration).repeatForever(autoreverses: false)
-    }
-}

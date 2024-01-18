@@ -11,6 +11,7 @@
 		3814DB592B476D45008A06A8 /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3814DB582B476D45008A06A8 /* ButtonModifier.swift */; };
 		38460C7B2B498DAF002F55C5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38460C7A2B498DAF002F55C5 /* CardView.swift */; };
 		38612BC12B589A5600B27822 /* ShakeEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38612BC02B589A5600B27822 /* ShakeEffect.swift */; };
+		3876D01D2B59CDE800F6086F /* ZoomEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3876D01C2B59CDE800F6086F /* ZoomEffect.swift */; };
 		387F2E092B4612800009DD45 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387F2E082B4612800009DD45 /* AspectVGrid.swift */; };
 		38F906F22B44B6CF00118C4F /* SetGameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F906F12B44B6CF00118C4F /* SetGameApp.swift */; };
 		38F906F42B44B6CF00118C4F /* SetCardGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F906F32B44B6CF00118C4F /* SetCardGameView.swift */; };
@@ -32,6 +33,7 @@
 		3814DB582B476D45008A06A8 /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
 		38460C7A2B498DAF002F55C5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		38612BC02B589A5600B27822 /* ShakeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeEffect.swift; sourceTree = "<group>"; };
+		3876D01C2B59CDE800F6086F /* ZoomEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEffect.swift; sourceTree = "<group>"; };
 		387F2E082B4612800009DD45 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		38F906EE2B44B6CF00118C4F /* SetGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SetGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F906F12B44B6CF00118C4F /* SetGameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameApp.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				38460C7A2B498DAF002F55C5 /* CardView.swift */,
 				3814DB562B470674008A06A8 /* CardModifier.swift */,
 				3814DB582B476D45008A06A8 /* ButtonModifier.swift */,
+				3876D01C2B59CDE800F6086F /* ZoomEffect.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 			files = (
 				3814DB592B476D45008A06A8 /* ButtonModifier.swift in Sources */,
 				38F907082B44BF0800118C4F /* Squiggle.swift in Sources */,
+				3876D01D2B59CDE800F6086F /* ZoomEffect.swift in Sources */,
 				38F907142B44DFE600118C4F /* SetCardGame.swift in Sources */,
 				38F9070F2B44CDF200118C4F /* SetCardView.swift in Sources */,
 				38460C7B2B498DAF002F55C5 /* CardView.swift in Sources */,

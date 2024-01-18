@@ -28,9 +28,11 @@ struct SetGame<Content> where Content: Matchable {
         cardsOnTheTable.indices.filter { cardsOnTheTable[$0].isSelected && cardsOnTheTable[$0].state == .matched }
     }
     
-    var hintsCount: Int = 0
+    private(set) var hintsCount: Int = 0
     
-    
+    var isThereMatch: Bool {
+        !matchedIndices.isEmpty
+    }
     
     var hints: [[Int]] {
         
