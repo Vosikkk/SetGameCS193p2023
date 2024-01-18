@@ -84,10 +84,15 @@ class SetCardGame: ObservableObject {
         game.deal(3)
     }
     
+    func shuffle() {
+        game.shuffle()
+    }
+    
     func hint() {
         game.hint()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { timer in
             self.game.disHint()
+            timer.invalidate()
         }
     }
 }
@@ -102,8 +107,6 @@ struct Setting {
     let shapes = [ShapesInSet.diamond, .oval, .squiggle]
     
     let colorHint: Color = Color(#colorLiteral(red: 0.4508578777, green: 0.9882974029, blue: 0.8376303315, alpha: 1))
-    
-    let tableColor: Color = Color(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1))
     
     let deckColor: Color = .purple
     

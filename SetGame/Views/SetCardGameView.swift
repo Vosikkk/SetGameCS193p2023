@@ -31,10 +31,13 @@ struct SetCardGameView: View {
             }
             cards
                 .overlay(labelSet)
-            HStack() {
+            HStack {
                 discardDeck
                 Spacer()
-                newGameButton
+                VStack(spacing: Constants.spacingForButtons) {
+                    newGameButton
+                    shuffleButton
+                }
                 Spacer()
                 deck
             }
@@ -82,6 +85,16 @@ struct SetCardGameView: View {
         .greenButton()
     }
     
+    private var shuffleButton: some View {
+        Button("Shuffle") {
+            withAnimation(
+                .interactiveSpring(
+                    response: 1, dampingFraction: Constants.Animation.dampingFraction)) {
+                setGame.shuffle()
+            }
+        }
+        .greenButton()
+    }
     
     private var newGameButton: some View {
         Button("New Game") {
@@ -126,14 +139,18 @@ struct SetCardGameView: View {
     }
     
     private var labelSet: some View {
-            Text("Set🔥")
+        Text("Set🔥")
             .font(.system(size: Constants.FontSize.labelFontSize))
-                .foregroundStyle(.blue)
-                .scaleEffect(setGame.isMatch ? 3 : 0)
-                .opacity(setGame.isMatch ? 1 : 0)
-                .transition(.scale)
-                .animation(.snappy(duration: Constants.Animation.labelSetDuration), value: setGame.isMatch)
+            .foregroundStyle(.orange)
+            .shadow(color: .black,
+                    radius: Constants.shadowRadius,
+                    x: Constants.positionX, y: Constants.positionY)
+            .scaleEffect(setGame.isMatch ? 3 : 0)
+            .opacity(setGame.isMatch ? 1 : 0)
+            .transition(.scale)
+            .animation(.spring(bounce: Constants.Animation.labelBounce), value: setGame.isMatch)
     }
+    
     
     // MARK: - Animations
     
@@ -165,7 +182,6 @@ struct SetCardGameView: View {
                     }
             delay += Constants.Animation.delay
         }
-    
     }
     
     
@@ -205,20 +221,29 @@ struct SetCardGameView: View {
     // MARK: - Nested type
     
     private struct Constants {
+        
         static let aspectRatio: CGFloat = 2/3
         static let spasing: CGFloat = 4
         static let cardTrasitionDelay: Double = 0.2
+        static let shadowRadius: CGFloat = 1.5
+        static let positionX: CGFloat = 1
+        static let positionY: CGFloat = 1
+        static let spacingForButtons: CGFloat = 10
         
         struct DeckSize {
             static let width: CGFloat = 50
         }
+        
         struct Animation {
             static let delay: CGFloat = 0.15
             static let dealtDurantion: CGFloat = 1
             static let onWayDuration: CGFloat = 0.5
             static let delayOffset: CGFloat = 0.5
             static let labelSetDuration: CGFloat = 0.3
+            static let labelBounce: Double = 0.7
+            static let dampingFraction: Double = 0.5
         }
+        
         struct FontSize {
             static let labelFontSize: CGFloat = 30
         }

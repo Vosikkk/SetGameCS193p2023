@@ -97,11 +97,11 @@ struct SetGame<Content> where Content: Matchable {
                     changeCards()
                     onlySelectedCard(chosenIndex)
                 }
-                
             }
             // Disselected card
         } else if let chosenIndex = cardsOnTheTable.getIndex(of: card), 
-                    isSelectedAndNoramlState(cardBy: chosenIndex, selected: true) {
+                    isSelectedAndNoramlState(cardBy: chosenIndex, selected: true), 
+                    matchedIndices.isEmpty {
            
             cardsOnTheTable[chosenIndex].isSelected = false
         }
@@ -109,7 +109,7 @@ struct SetGame<Content> where Content: Matchable {
     
     
     private func isSelectedAndNoramlState(cardBy index: Int, selected: Bool) -> Bool {
-        return selected ? cardsOnTheTable[index].isSelected : !cardsOnTheTable[index].isSelected 
+        return selected ? cardsOnTheTable[index].isSelected : !cardsOnTheTable[index].isSelected
         && cardsOnTheTable[index].state == .normal
     }
     
@@ -178,6 +178,10 @@ struct SetGame<Content> where Content: Matchable {
                 cardsOnTheTable[index].isSelected = false
             }
         }
+    }
+    
+    mutating func shuffle() {
+        cardsOnTheTable.shuffle()
     }
     
     mutating private func resetCardState(_ card: inout Card) {

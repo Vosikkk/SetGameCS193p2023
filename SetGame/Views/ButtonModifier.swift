@@ -11,11 +11,17 @@ struct ButtonModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .padding(8)
+            .padding(Constants.inset)
             .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                   .stroke(Color.green, lineWidth: 3)
+                RoundedRectangle(cornerRadius: Constants.cornerRadius)
+                    .stroke(.blue, lineWidth: Constants.lineWidth)
             )
+    }
+    
+    struct Constants {
+        static let inset: CGFloat = 8
+        static let cornerRadius: CGFloat = 10
+        static let lineWidth: CGFloat = 2
     }
 }
 
