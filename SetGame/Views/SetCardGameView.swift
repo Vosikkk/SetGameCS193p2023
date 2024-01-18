@@ -90,7 +90,8 @@ struct SetCardGameView: View {
             withAnimation(
                 .interactiveSpring(
                     response: 1, dampingFraction: Constants.Animation.dampingFraction)) {
-                setGame.shuffle()
+                
+                        setGame.shuffle()
             }
         }
         .greenButton()
@@ -145,7 +146,7 @@ struct SetCardGameView: View {
             .shadow(color: .black,
                     radius: Constants.shadowRadius,
                     x: Constants.positionX, y: Constants.positionY)
-            .scaleEffect(setGame.isMatch ? 3 : 0)
+            .scaleEffect(setGame.isMatch ? Constants.Animation.scaleEffect : 0)
             .opacity(setGame.isMatch ? 1 : 0)
             .transition(.scale)
             .animation(.spring(bounce: Constants.Animation.labelBounce), value: setGame.isMatch)
@@ -242,6 +243,7 @@ struct SetCardGameView: View {
             static let labelSetDuration: CGFloat = 0.3
             static let labelBounce: Double = 0.7
             static let dampingFraction: Double = 0.5
+            static let scaleEffect: CGFloat = 3
         }
         
         struct FontSize {

@@ -196,6 +196,7 @@ struct SetGame<Content> where Content: Matchable {
         var content: Content
         let id = UUID()
     }
+    
     enum CardState {
         case normal, matched, notMatched, hint
     }
