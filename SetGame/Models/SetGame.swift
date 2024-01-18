@@ -87,18 +87,12 @@ struct SetGame<Content> where Content: Matchable {
             if selectedIndices.count == 2 {
                 cardsOnTheTable[chosenIndex].isSelected = true
                 handleMatchDisMatch()
-                if matchedIndices.count == numberOfCardsToMatch {
-                    // made auto cards to discard and get new cards
-                    addCardsToDiscardPile()
-                    changeCards()
-                }
-                
             } else {
                 // other count of selected
                 if selectedIndices.count == 1 || selectedIndices.count == 0 {
                     cardsOnTheTable[chosenIndex].isSelected = true
                 } else {
-                   // changeCards()
+                    changeCards()
                     onlySelectedCard(chosenIndex)
                 }
                 
@@ -140,7 +134,7 @@ struct SetGame<Content> where Content: Matchable {
     private mutating func changeCards() {
         guard matchedIndices.count == numberOfCardsToMatch else { return }
         let replaceIndices = matchedIndices
-       
+        addCardsToDiscardPile()
         hintsCount = 0
         if deck.count >= numberOfCardsToMatch && cardsOnTheTable.count == numberOfCardsToStart {
             // replace
@@ -171,7 +165,7 @@ struct SetGame<Content> where Content: Matchable {
                 cardsOnTheTable[index].state = .hint
             }
             hintsCount += 1
-            hintsCount = hintsCount % hints.count /*hintsCount < hints.count ? hintsCount : 0*/
+            hintsCount = hintsCount % hints.count 
         }
     }
     

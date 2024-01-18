@@ -48,6 +48,7 @@
                 .degrees(rotation),
                 axis: (x: 0.0, y: 1.0, z: 0.0)
             )
+            .shakeEffect(with: state == .notMatched ? 1 : 0)
         }
         
         private func highlightColor() -> Color {

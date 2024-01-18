@@ -15,8 +15,6 @@ struct SetCardGameView: View {
     
     @Namespace private var dealingNamesSpace
     
-    @Namespace private var discardNamesSpace
-    
     @State private var dealt: Set<Card.ID> = []
     
     @State var firstDeal: Bool = true
@@ -60,10 +58,11 @@ struct SetCardGameView: View {
                     .onTapGesture {
                         withAnimation {
                             setGame.choose(card: card)
+                       // } completion: {
                             if !onWayToTheTableCards.isEmpty {
                                 cardsGoFromTheDeck()
+                            }
                         }
-                    }
                 }
             }
         }
@@ -109,7 +108,6 @@ struct SetCardGameView: View {
             ForEach(setGame.discard) { card in
                view(for: card)
                 .zIndex(zIndex(for: card))
-                
             }
         }
         .frame(
@@ -156,6 +154,7 @@ struct SetCardGameView: View {
                     }
             delay += Constants.Animation.delay
         }
+    
     }
     
     
