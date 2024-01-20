@@ -28,11 +28,21 @@ struct SetGame<Content> where Content: Matchable {
         cardsOnTheTable.indices.filter { cardsOnTheTable[$0].isSelected && cardsOnTheTable[$0].state == .matched }
     }
     
+    private var notMatchedIndices: [Int] {
+        cardsOnTheTable.indices.filter { cardsOnTheTable[$0].isSelected && cardsOnTheTable[$0].state == .notMatched }
+    }
+    
+    
     private(set) var hintsCount: Int = 0
     
-    var isThereMatch: Bool {
+    var isMatch: Bool {
         !matchedIndices.isEmpty
     }
+    
+    var isNotMatch: Bool {
+        !notMatchedIndices.isEmpty
+    }
+    
     
     var hints: [[Int]] {
         
@@ -61,7 +71,7 @@ struct SetGame<Content> where Content: Matchable {
         self.numberOfCardsToStart = numberOfCardsToStart
         for index in 0..<numberOfCardsInDeck {
              let content = cardContentFactory(index)
-                deck.append(Card(content: content))
+                deck.append(Card(content: content, id: index))
             
         }
         deck.shuffle()
@@ -194,12 +204,16 @@ struct SetGame<Content> where Content: Matchable {
         var isFaceUp: Bool = false
         var state: CardState = .normal
         var content: Content
-        let id = UUID()
+        let id: Int
+        
+        enum CardState {
+            case normal, matched, notMatched, hint
+        }
     }
     
-    enum CardState {
-        case normal, matched, notMatched, hint
-    }
+//    enum CardState {
+//        case normal, matched, notMatched, hint
+//    }
 }
 
 extension Array where Element: Identifiable {

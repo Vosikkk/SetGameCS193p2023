@@ -30,7 +30,7 @@ struct SetCardGameView: View {
                 hintButton
             }
             cards
-                .overlay(labelSet)
+                .overlay(FlyingText(text, isAnimationEnabled: shouldAnimateText))
             HStack {
                 discardDeck
                 Spacer()
@@ -59,7 +59,7 @@ struct SetCardGameView: View {
         AspectVGrid(items: setGame.cards, aspectRatio: Constants.aspectRatio) { card in
             if isDealt(card) {
                 view(for: card)
-                    .padding(Constants.spasing)
+                    .padding(Constants.spaсing)
                     .onTapGesture {
                         withAnimation {
                             setGame.choose(card: card)
@@ -90,7 +90,6 @@ struct SetCardGameView: View {
             withAnimation(
                 .interactiveSpring(
                     response: 1, dampingFraction: Constants.Animation.dampingFraction)) {
-                
                         setGame.shuffle()
             }
         }
@@ -119,6 +118,7 @@ struct SetCardGameView: View {
         }
     }
    
+    
     private var discardDeck: some View {
         ZStack {
             ForEach(setGame.discard) { card in
@@ -138,20 +138,6 @@ struct SetCardGameView: View {
             .matchedGeometryEffect(id: card.id, in: dealingNamesSpace)
             .transition(.asymmetric(insertion: .identity, removal: .identity))
     }
-    
-    private var labelSet: some View {
-        Text("Set🔥")
-            .font(.system(size: Constants.FontSize.labelFontSize))
-            .foregroundStyle(.orange)
-            .shadow(color: .black,
-                    radius: Constants.shadowRadius,
-                    x: Constants.positionX, y: Constants.positionY)
-            .scaleEffect(setGame.isMatch ? Constants.Animation.scaleEffect : 0)
-            .opacity(setGame.isMatch ? 1 : 0)
-            .transition(.scale)
-            .animation(.spring(bounce: Constants.Animation.labelBounce), value: setGame.isMatch)
-    }
-    
     
     // MARK: - Animations
     
@@ -209,6 +195,14 @@ struct SetCardGameView: View {
         Double(setGame.discard.firstIndex(where: { $0.id == card.id }) ?? 0)
     }
     
+    var shouldAnimateText: Bool {
+        setGame.isMatch || setGame.isNotMatch
+    }
+    
+    var text: String {
+        setGame.isMatch ? "Set🔥" : "Oh☹️"
+    }
+    
     private func newGame() {
         setGame.newGame()
         dealt = []
@@ -224,11 +218,8 @@ struct SetCardGameView: View {
     private struct Constants {
         
         static let aspectRatio: CGFloat = 2/3
-        static let spasing: CGFloat = 4
+        static let spaсing: CGFloat = 4
         static let cardTrasitionDelay: Double = 0.2
-        static let shadowRadius: CGFloat = 1.5
-        static let positionX: CGFloat = 1
-        static let positionY: CGFloat = 1
         static let spacingForButtons: CGFloat = 10
         
         struct DeckSize {
@@ -240,14 +231,7 @@ struct SetCardGameView: View {
             static let dealtDurantion: CGFloat = 1
             static let onWayDuration: CGFloat = 0.5
             static let delayOffset: CGFloat = 0.5
-            static let labelSetDuration: CGFloat = 0.3
-            static let labelBounce: Double = 0.7
             static let dampingFraction: Double = 0.5
-            static let scaleEffect: CGFloat = 3
-        }
-        
-        struct FontSize {
-            static let labelFontSize: CGFloat = 30
         }
     }
 }

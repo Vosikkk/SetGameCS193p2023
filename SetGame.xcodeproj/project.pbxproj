@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3814DB572B470674008A06A8 /* CardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3814DB562B470674008A06A8 /* CardModifier.swift */; };
 		3814DB592B476D45008A06A8 /* ButtonModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3814DB582B476D45008A06A8 /* ButtonModifier.swift */; };
+		384259EE2B5B36ED00DC4502 /* FlyingText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384259ED2B5B36ED00DC4502 /* FlyingText.swift */; };
 		38460C7B2B498DAF002F55C5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38460C7A2B498DAF002F55C5 /* CardView.swift */; };
 		38612BC12B589A5600B27822 /* ShakeEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38612BC02B589A5600B27822 /* ShakeEffect.swift */; };
 		3876D01D2B59CDE800F6086F /* ZoomEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3876D01C2B59CDE800F6086F /* ZoomEffect.swift */; };
@@ -31,6 +32,7 @@
 /* Begin PBXFileReference section */
 		3814DB562B470674008A06A8 /* CardModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardModifier.swift; sourceTree = "<group>"; };
 		3814DB582B476D45008A06A8 /* ButtonModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonModifier.swift; sourceTree = "<group>"; };
+		384259ED2B5B36ED00DC4502 /* FlyingText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyingText.swift; sourceTree = "<group>"; };
 		38460C7A2B498DAF002F55C5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		38612BC02B589A5600B27822 /* ShakeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeEffect.swift; sourceTree = "<group>"; };
 		3876D01C2B59CDE800F6086F /* ZoomEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEffect.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				3814DB562B470674008A06A8 /* CardModifier.swift */,
 				3814DB582B476D45008A06A8 /* ButtonModifier.swift */,
 				3876D01C2B59CDE800F6086F /* ZoomEffect.swift */,
+				384259ED2B5B36ED00DC4502 /* FlyingText.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				38F9070B2B44CA4500118C4F /* StripedForm.swift in Sources */,
 				38F907052B44BACE00118C4F /* Diamond.swift in Sources */,
 				38F906F22B44B6CF00118C4F /* SetGameApp.swift in Sources */,
+				384259EE2B5B36ED00DC4502 /* FlyingText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

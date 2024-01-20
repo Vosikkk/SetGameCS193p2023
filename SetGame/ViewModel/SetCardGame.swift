@@ -46,7 +46,11 @@ class SetCardGame: ObservableObject {
     }
     
     var isMatch: Bool {
-        game.isThereMatch
+        game.isMatch
+    }
+    
+    var isNotMatch: Bool {
+        game.isNotMatch
     }
     
     var cards: [Card] {

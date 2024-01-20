@@ -22,9 +22,9 @@
         }
         var isSelected: Bool
         var settings: Setting
-        var state: SetGame<SetCard>.CardState
+        var state: SetGame<SetCard>.Card.CardState
         
-        init(isFaceUp: Bool, isSelected: Bool, settings: Setting, state: SetGame<SetCard>.CardState) {
+        init(isFaceUp: Bool, isSelected: Bool, settings: Setting, state: SetGame<SetCard>.Card.CardState) {
             self.isSelected = isSelected
             self.settings = settings
             self.state = state
@@ -73,7 +73,7 @@
     }
 
     extension View {
-        func cardMod(isSelected: Bool, settings: Setting, isFaceUp: Bool,  state: SetGame<SetCard>.CardState) -> some View {
+        func cardMod(isSelected: Bool, settings: Setting, isFaceUp: Bool,  state: SetGame<SetCard>.Card.CardState) -> some View {
             modifier(CardModifier(isFaceUp: isFaceUp, isSelected: isSelected, settings: settings, state: state))
         }
     }
